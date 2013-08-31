@@ -11,12 +11,12 @@ import netP5.*;
 OscP5 oscP5;  // osc object
 
 // listening
-int iNet_myListeningPort  = 12001;  // port I am listening on 
+int iNet_myListeningPort  = 12000;  // port I am listening on 
 
 // speaking
 NetAddress  iNet_DestinationAddress;  // someone to talk to
 String      iNet_DestinationIP = "127.0.0.1";
-int         iNet_DestinationPort = 12000;   
+int         iNet_DestinationPort = 12001;   
 
 
 void setup() {
@@ -35,6 +35,10 @@ void setup() {
    */
   
   iNet_DestinationAddress = new NetAddress(iNet_DestinationIP, iNet_DestinationPort);  
+    
+  oscP5.plug ( this, "setReceivedColor", "/ballColor");
+  oscP5.plug ( this, "setReceivedPosition", "/ballPosition");
+    
 }
 
 
@@ -48,7 +52,7 @@ void draw() {
 void mouseReleased() {
 
   //create a message with a unique address pattern
-  OscMessage myOutGoingMessage = new OscMessage("/steveSays");  // starts with an ADDRESS PATTERN --> = / + any string you like
+  OscMessage myOutGoingMessage = new OscMessage("/ballColor");  // starts with an ADDRESS PATTERN --> = / + any string you like
   
   // send myBallColor
   myOutGoingMessage.add( red  ( ballColor )  );   // 0
@@ -71,11 +75,6 @@ void oscEvent( OscMessage theOscMessage ) {
   println("    addrpattern: " + theOscMessage.addrPattern());
   println("    typetag:     " + theOscMessage.typetag());
   println();
-  
-  float r  = theOscMessage.get(0).floatValue();
-  float gr = theOscMessage.get(1).floatValue();
-  float b  = theOscMessage.get(2).floatValue();
-       
-  receivedColor = color (r,gr,b);
+
   
 }
